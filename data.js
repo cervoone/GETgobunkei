@@ -36,27 +36,37 @@
 const QUIZ_DATA = [
 
   // ---------------- pattern 0：5文型のキホンの「キ」 ----------------
+ 
+   {
+    id: 1, pattern: 0, type: 'choice',
+    question: '「文の（主）要素」って何個？',
+    choices: ['3つ', '4つ', '5つ', '6つ'],
+    correctIndex: 1,
+    explanation: '「文の（主）要素」の組み合わせで文型が決まる。文の要素はS（主語）,V（動詞）,O（目的語）,C（補語）の４つ。'
+  },
+  
+    
   {
-    id: 1, pattern: 0, type: 'definition',
+    id: 2, pattern: 0, type: 'definition',
     question: '英文法で「S」は何を表す記号？',
     answer: '主語（Subject）',
     explanation: 'S・V・O・Cは英文の要素を表す記号。Sはsubject（主語）の頭文字で、「〜は」「〜が」にあたる部分。'
   },
   {
-    id: 2, pattern: 0, type: 'definition',
+    id: 3, pattern: 0, type: 'definition',
     question: '英文法で「M」は何を表す記号？',
     answer: '修飾語（Modifier）',
     explanation: 'MはModifier（修飾語）の頭文字。時・場所・様態などを表す語句で、文型そのものを決める要素にはならない。例：I live in Tokyo.のin Tokyoの部分。'
   },
   {
-    id: 3, pattern: 0, type: 'choice',
+    id: 4, pattern: 0, type: 'choice',
     question: '英語の文型は全部でいくつに分類される？',
     choices: ['3つ', '4つ', '5つ', '6つ'],
     correctIndex: 2,
     explanation: '英語の文はS・V・O・Cの組み合わせによって第1文型〜第5文型の5種類に分類される。これは動詞の性質（自動詞か他動詞か、補語をとるかなど）による分類。'
   },
   {
-    id: 4, pattern: 0, type: 'choice',
+    id: 5, pattern: 0, type: 'choice',
     question: '文型を決める一番の決め手は何？',
     choices: ['文の長さ', '動詞の種類', '主語の人称', '時制'],
     correctIndex: 1,
