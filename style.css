@@ -277,7 +277,7 @@ body {
 /* --- 解説ボタン・ナビ --- */
 .btn-explanation {
   background: var(--moss-dark);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 .btn-explanation.hidden { display: none; }
 
