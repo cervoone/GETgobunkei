@@ -44,29 +44,36 @@ const QUIZ_DATA = [
     correctIndex: 1,
     explanation: '「文の（主）要素」の組み合わせで文型が決まる。文の要素はS（主語）,V（動詞）,O（目的語）,C（補語）の４つ。'
   },
-  
+
+   {
+    id: 2, pattern: 0, type: 'definition',
+    question: '「文の要素」以外はなんと呼ばれる？',
+    answer: '修飾語（Modifier）',
+    explanation: 'S・V・O・Cが文の「骨組み」とも言える中心部分で、それ以外は「飾り」と考えることができ、文法用語としては「修飾語」と言い、略号は「修飾語」を意味するModifierの頭文字をとってMで表します。'
+  },
     
   {
-    id: 2, pattern: 0, type: 'definition',
+    id: 3, pattern: 0, type: 'definition',
     question: '英文法で「S」は何を表す記号？',
     answer: '主語（Subject）',
     explanation: 'S・V・O・Cは英文の要素を表す記号。Sはsubject（主語）の頭文字で、「〜は」「〜が」にあたる部分。'
   },
+  
   {
-    id: 3, pattern: 0, type: 'definition',
+    id: 4, pattern: 0, type: 'definition',
     question: '英文法で「M」は何を表す記号？',
     answer: '修飾語（Modifier）',
     explanation: 'MはModifier（修飾語）の頭文字。時・場所・様態などを表す語句で、文型そのものを決める要素にはならない。例：I live in Tokyo.のin Tokyoの部分。'
   },
   {
-    id: 4, pattern: 0, type: 'choice',
+    id: 5, pattern: 0, type: 'choice',
     question: '英語の文型は全部でいくつに分類される？',
     choices: ['3つ', '4つ', '5つ', '6つ'],
     correctIndex: 2,
     explanation: '英語の文はS・V・O・Cの組み合わせによって第1文型〜第5文型の5種類に分類される。これは動詞の性質（自動詞か他動詞か、補語をとるかなど）による分類。'
   },
   {
-    id: 5, pattern: 0, type: 'choice',
+    id: 6, pattern: 0, type: 'choice',
     question: '文型を決める一番の決め手は何？',
     choices: ['文の長さ', '動詞の種類', '主語の人称', '時制'],
     correctIndex: 1,
@@ -76,9 +83,9 @@ const QUIZ_DATA = [
   // ---------------- pattern 1：第1文型（SV） ----------------
   {
     id: 11, pattern: 1, type: 'definition',
-    question: '第1文型（SV）とは、どのような文？',
-    answer: '主語(S)と動詞(V)だけで意味が成り立つ文。例：Birds fly.（鳥は飛ぶ。）',
-    explanation: '第1文型はS+Vのみで完結する文型。動詞は「完全自動詞」と呼ばれ、目的語も補語も必要としない。live, go, happen, arriveなどが代表的。'
+    question: '第1文型とは、どのような文？',
+    answer: '主語(S)と動詞(V)だけで意味が成り立つ文。S+V。 例：Birds fly.（鳥は飛ぶ。）',
+    explanation: '第1文型は「文の要素」がS+Vのみで完結する文型。動詞は「完全自動詞」と呼ばれ、目的語も補語も必要としない。live, go, happen, arriveなどが代表的。修飾語は全ての文型につくことができるのでで修飾語の有無は文型には関係ない。'
   },
   {
     id: 12, pattern: 1, type: 'definition',
