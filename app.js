@@ -217,23 +217,36 @@ function renderQuestion(mode) {
     }
 
     const order = buildChoiceOrder(currentIndex);
-    order.forEach((opt, pos) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'choice-btn';
-      b.textContent = opt.text;
-      if (answered) {
-        b.disabled = true;
-        if (opt.isCorrect) {
-          b.classList.add('is-correct');
-        } else if (chosenPos[currentIndex] === pos) {
-          b.classList.add('is-wrong');
-        }
-      } else {
-        b.addEventListener('click', () => selectChoice(pos));
-      }
-      choiceListEl.appendChild(b);
-    });
+ order.forEach((opt, pos) => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'choice-btn';
+
+  const textSpan = document.createElement('span');
+  textSpan.className = 'choice-text';
+  textSpan.textContent = opt.text;
+  b.appendChild(textSpan);
+
+  if (answered) {
+    b.disabled = true;
+    if (opt.isCorrect) {
+      b.classList.add('is-correct');
+      const icon = document.createElement('span');
+      icon.className = 'choice-icon';
+      icon.textContent = '○';
+      b.appendChild(icon);
+    } else if (chosenPos[currentIndex] === pos) {
+      b.classList.add('is-wrong');
+      const icon = document.createElement('span');
+      icon.className = 'choice-icon';
+      icon.textContent = '×';
+      b.appendChild(icon);
+    }
+  } else {
+    b.addEventListener('click', () => selectChoice(pos));
+  }
+  choiceListEl.appendChild(b);
+});   
   }
 
   // 解説トグル（∨ 解説）：回答済みのときだけ表示し、開閉状態は毎回閉じた状態に戻す
