@@ -41,21 +41,18 @@ const btnReveal = document.getElementById('btn-reveal');
 const judgeRow = document.getElementById('judge-row');
 const btnCorrect = document.getElementById('btn-correct');
 const btnWrong = document.getElementById('btn-wrong');
-const btnExplanation = document.getElementById('btn-explanation');
 const btnPrevQuestion = document.getElementById('btn-prev-question');
 const btnNextQuestion = document.getElementById('btn-next-question');
 const btnPrevAnswer = document.getElementById('btn-prev-answer');
 const btnNextAnswer = document.getElementById('btn-next-answer');
 const btnQuit = document.getElementById('btn-quit');
 
-const explOverlay = document.getElementById('explanation-overlay');
-const explPatternLabelEl = document.getElementById('expl-pattern-label');
-const explQuestionEl = document.getElementById('expl-question');
-const explAnswerEl = document.getElementById('expl-answer');
-const explTextEl = document.getElementById('expl-text');
-const btnPrevExpl = document.getElementById('btn-prev-expl');
-const btnNextExpl = document.getElementById('btn-next-expl');
-const btnCloseExpl = document.getElementById('btn-close-expl');
+// ---------- 解説（∨ 解説 インライン展開） ----------
+const explainWrap = document.getElementById('explain-wrap');
+const btnExplainToggle = document.getElementById('btn-explain-toggle');
+const explainBox = document.getElementById('explain-box');
+const explainText = document.getElementById('explain-text');
+const btnExplainClose = document.getElementById('btn-explain-close');
 
 const resultCorrectEl = document.getElementById('result-correct');
 const resultTotalEl = document.getElementById('result-total');
@@ -73,7 +70,6 @@ let currentIndex = 0;
 let itemResults = []; // quizItemsと同じ長さ。true / false / null（未回答）
 let choiceOrder = []; // 4択問題のシャッフル済み選択肢キャッシュ
 let chosenPos = []; // 4択問題でユーザーが選んだ位置（シャッフル後のindex）
-let explIndex = 0;
 
 function showScreen(el) {
   ALL_SCREENS.forEach(s => s.classList.add('hidden'));
@@ -240,12 +236,15 @@ function renderQuestion(mode) {
     });
   }
 
-  // 解説ボタン
+  // 解説トグル（∨ 解説）：回答済みのときだけ表示し、開閉状態は毎回閉じた状態に戻す
   if (answered) {
-    btnExplanation.classList.remove('hidden');
+    explainWrap.classList.remove('hidden');
+    explainText.textContent = item.explanation || '';
   } else {
-    btnExplanation.classList.add('hidden');
+    explainWrap.classList.add('hidden');
   }
+  explainBox.classList.add('hidden');
+  btnExplainToggle.classList.remove('hidden');
 
   // ナビゲーション（問題）
   btnPrevQuestion.disabled = currentIndex === 0;
@@ -289,6 +288,17 @@ function selectChoice(pos) {
   renderQuestion('answer');
 }
 
+// ---- 解説の開閉 ----
+btnExplainToggle.addEventListener('click', () => {
+  explainBox.classList.remove('hidden');
+  btnExplainToggle.classList.add('hidden');
+});
+
+btnExplainClose.addEventListener('click', () => {
+  explainBox.classList.add('hidden');
+  btnExplainToggle.classList.remove('hidden');
+});
+
 // ---- 問題そのものを行き来する「前の問題／次の問題」 ----
 btnPrevQuestion.addEventListener('click', () => {
   if (currentIndex === 0) return;
@@ -325,44 +335,7 @@ btnQuit.addEventListener('click', () => {
 });
 
 // ============================================================
-// ④ 解説オーバーレイ
-// ============================================================
-function renderExplanation() {
-  const item = quizItems[explIndex];
-  explPatternLabelEl.textContent = `${PATTERN_LABELS[item.pattern]} No.${explIndex + 1}`;
-  explQuestionEl.textContent = item.question;
-  explAnswerEl.textContent = item.type === 'definition' ? item.answer : item.choices[item.correctIndex];
-  explTextEl.textContent = item.explanation;
-
-  btnPrevExpl.disabled = explIndex === 0;
-  btnNextExpl.disabled = explIndex === quizItems.length - 1;
-}
-
-btnExplanation.addEventListener('click', () => {
-  explIndex = currentIndex;
-  renderExplanation();
-  explOverlay.classList.remove('hidden');
-});
-
-btnPrevExpl.addEventListener('click', () => {
-  if (explIndex === 0) return;
-  explIndex--;
-  renderExplanation();
-});
-
-btnNextExpl.addEventListener('click', () => {
-  if (explIndex === quizItems.length - 1) return;
-  explIndex++;
-  renderExplanation();
-});
-
-btnCloseExpl.addEventListener('click', () => {
-  explOverlay.classList.add('hidden');
-  renderQuestion(itemResults[currentIndex] !== null ? 'answer' : 'question');
-});
-
-// ============================================================
-// ⑤ 結果画面
+// ④ 結果画面
 // ============================================================
 function finishQuiz() {
   progressBar.style.width = '100%';
