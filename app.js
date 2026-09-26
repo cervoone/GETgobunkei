@@ -37,13 +37,11 @@ const patternNoEl = document.getElementById('pattern-no');
 const questionTextEl = document.getElementById('question-text');
 const answerTextEl = document.getElementById('answer-text');
 const choiceListEl = document.getElementById('choice-list');
-
 const btnReveal = document.getElementById('btn-reveal');
 const judgeRow = document.getElementById('judge-row');
 const btnCorrect = document.getElementById('btn-correct');
 const btnWrong = document.getElementById('btn-wrong');
 const btnExplanation = document.getElementById('btn-explanation');
-
 const btnPrevQuestion = document.getElementById('btn-prev-question');
 const btnNextQuestion = document.getElementById('btn-next-question');
 const btnPrevAnswer = document.getElementById('btn-prev-answer');
@@ -69,12 +67,12 @@ const btnResultHome = document.getElementById('btn-result-home');
 
 // ---------- 状態 ----------
 let currentLevel = null;
-let currentPool = [];      // 選んだレベルに含まれる全問題（元の並び順）
-let quizItems = [];        // 今回のセッションで出題する問題
+let currentPool = []; // 選んだレベルに含まれる全問題（元の並び順）
+let quizItems = []; // 今回のセッションで出題する問題
 let currentIndex = 0;
-let itemResults = [];      // quizItemsと同じ長さ。true / false / null（未回答）
-let choiceOrder = [];      // 4択問題のシャッフル済み選択肢キャッシュ
-let chosenPos = [];        // 4択問題でユーザーが選んだ位置（シャッフル後のindex）
+let itemResults = []; // quizItemsと同じ長さ。true / false / null（未回答）
+let choiceOrder = []; // 4択問題のシャッフル済み選択肢キャッシュ
+let chosenPos = []; // 4択問題でユーザーが選んだ位置（シャッフル後のindex）
 let explIndex = 0;
 
 function showScreen(el) {
@@ -113,14 +111,12 @@ function renderHome() {
 function openSettings(level) {
   currentLevel = level;
   currentPool = QUIZ_DATA.filter(item => level.patterns.includes(item.pattern));
-
   settingsTitleEl.textContent = level.label;
   totalCountEl.textContent = currentPool.length;
   startNumberInput.value = 1;
   startNumberInput.max = currentPool.length;
   numQuestionsInput.value = Math.min(10, currentPool.length);
   settingsError.textContent = '';
-
   showScreen(screenSettings);
 }
 
@@ -180,9 +176,6 @@ function buildChoiceOrder(index) {
 }
 
 function isAnsweredState(mode, item) {
-  if (item.type === 'choice') {
-    return itemResults[currentIndex] !== null;
-  }
   return mode === 'answer' || itemResults[currentIndex] !== null;
 }
 
@@ -191,7 +184,9 @@ function renderQuestion(mode) {
   const answered = isAnsweredState(mode, item);
 
   patternLabelEl.textContent = PATTERN_LABELS[item.pattern];
-  patternNoEl.textContent = currentIndex + 1;
+  patternNoEl.textContent = item.type === 'choice'
+    ? `${currentIndex + 1}（選択問題）`
+    : currentIndex + 1;
   progressText.textContent = `${currentIndex + 1} / ${quizItems.length}`;
   scoreText.textContent = `正解 ${correctCount()}`;
   progressBar.style.width = `${(currentIndex / quizItems.length) * 100}%`;
@@ -214,11 +209,16 @@ function renderQuestion(mode) {
     }
   } else {
     // 4択問題
-    btnReveal.classList.add('hidden');
     judgeRow.classList.add('hidden');
     answerTextEl.classList.add('hidden');
     choiceListEl.classList.remove('hidden');
     choiceListEl.innerHTML = '';
+
+    if (answered) {
+      btnReveal.classList.add('hidden');
+    } else {
+      btnReveal.classList.remove('hidden');
+    }
 
     const order = buildChoiceOrder(currentIndex);
     order.forEach((opt, pos) => {
@@ -226,7 +226,6 @@ function renderQuestion(mode) {
       b.type = 'button';
       b.className = 'choice-btn';
       b.textContent = opt.text;
-
       if (answered) {
         b.disabled = true;
         if (opt.isCorrect) {
@@ -250,7 +249,6 @@ function renderQuestion(mode) {
 
   // ナビゲーション（問題）
   btnPrevQuestion.disabled = currentIndex === 0;
-
   const isLast = currentIndex === quizItems.length - 1;
   if (isLast && answered) {
     btnNextQuestion.textContent = '結果を見る';
@@ -280,6 +278,7 @@ function judge(wasCorrect) {
   itemResults[currentIndex] = wasCorrect;
   renderQuestion('answer');
 }
+
 btnCorrect.addEventListener('click', () => judge(true));
 btnWrong.addEventListener('click', () => judge(false));
 
@@ -296,6 +295,7 @@ btnPrevQuestion.addEventListener('click', () => {
   currentIndex--;
   renderQuestion('question');
 });
+
 btnNextQuestion.addEventListener('click', () => {
   if (currentIndex === quizItems.length - 1) {
     if (itemResults[currentIndex] !== null) {
@@ -313,6 +313,7 @@ btnPrevAnswer.addEventListener('click', () => {
   currentIndex--;
   renderQuestion('answer');
 });
+
 btnNextAnswer.addEventListener('click', () => {
   if (currentIndex === quizItems.length - 1) return;
   currentIndex++;
@@ -328,7 +329,7 @@ btnQuit.addEventListener('click', () => {
 // ============================================================
 function renderExplanation() {
   const item = quizItems[explIndex];
-  explPatternLabelEl.textContent = `${PATTERN_LABELS[item.pattern]}　No.${explIndex + 1}`;
+  explPatternLabelEl.textContent = `${PATTERN_LABELS[item.pattern]} No.${explIndex + 1}`;
   explQuestionEl.textContent = item.question;
   explAnswerEl.textContent = item.type === 'definition' ? item.answer : item.choices[item.correctIndex];
   explTextEl.textContent = item.explanation;
@@ -342,16 +343,19 @@ btnExplanation.addEventListener('click', () => {
   renderExplanation();
   explOverlay.classList.remove('hidden');
 });
+
 btnPrevExpl.addEventListener('click', () => {
   if (explIndex === 0) return;
   explIndex--;
   renderExplanation();
 });
+
 btnNextExpl.addEventListener('click', () => {
   if (explIndex === quizItems.length - 1) return;
   explIndex++;
   renderExplanation();
 });
+
 btnCloseExpl.addEventListener('click', () => {
   explOverlay.classList.add('hidden');
   renderQuestion(itemResults[currentIndex] !== null ? 'answer' : 'question');
@@ -362,6 +366,7 @@ btnCloseExpl.addEventListener('click', () => {
 // ============================================================
 function finishQuiz() {
   progressBar.style.width = '100%';
+
   const total = quizItems.length;
   const correct = correctCount();
   const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
@@ -371,7 +376,6 @@ function finishQuiz() {
   resultPercentEl.textContent = `正答率 ${percent}%`;
 
   const wrongItems = quizItems.filter((item, i) => itemResults[i] === false);
-
   if (wrongItems.length > 0) {
     reviewWrap.classList.remove('hidden');
     reviewList.innerHTML = '';
@@ -390,6 +394,7 @@ function finishQuiz() {
 btnRestart.addEventListener('click', () => {
   openSettings(currentLevel);
 });
+
 btnResultHome.addEventListener('click', () => {
   showScreen(screenHome);
 });
