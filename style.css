@@ -446,3 +446,8 @@ body {
 #btn-next-answer {
   display: none !important;
 }
+
+/* 「クイズをやめて、ホームに戻る」ボタンの上余白を詰める */
+#btn-quit {
+  margin-top: 0;
+}
