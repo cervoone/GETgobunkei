@@ -7,141 +7,120 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="style.css">
 <script>
-  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-
 <div class="app" id="app-root">
 
-  <!-- ============ ① ホーム画面（レベル選択） ============ -->
-  <section id="screen-home" class="screen">
-    <h1 class="app-title">英語のねっこ！<br>5文型マスターアプリ</h1>
-    <p class="app-sub">練習したいレベルを選んでください</p>
+<!-- ============ ① ホーム画面（レベル選択） ============ -->
+<section id="screen-home" class="screen">
+<h1 class="app-title">英語のねっこ！<br>5文型マスターアプリ</h1>
+<p class="app-sub">練習したいレベルを選んでください</p>
+<div id="level-list" class="level-list">
+<!-- JSでレベルバナーを自動生成 -->
+</div>
+<details class="howto">
+<summary>このアプリの使い方</summary>
+<div class="howto-body">
+<p>① 上のバナーから練習したいレベルを選びます。</p>
+<p>② 出題する範囲（何番から何個）と、順番通りかランダムかを選んで「はじめる」を押します。</p>
+<p>③ 問題には2種類あります。<br>
+・定義問題：「〜って何？」に答える問題（「答えを見る」→自己採点）<br>
+・4択問題：4つの選択肢から正しいものを選ぶ問題（自動採点、または「答えを見る」で正解を確認）</p>
+<p>④ 答えを確認すると「∨ 解説」が表示されます。タップすると詳しい説明を読めます。</p>
+<p>⑤ 「前の問題」「次の問題」「前の解答」「次の解答」で自由に行き来できます。</p>
+</div>
+</details>
+</section>
 
-    <div id="level-list" class="level-list">
-      <!-- JSでレベルバナーを自動生成 -->
-    </div>
+<!-- ============ ② 設定画面 ============ -->
+<section id="screen-settings" class="screen hidden">
+<h1 class="app-title" id="settings-title">レベル名</h1>
+<p class="app-sub">このレベルの問題数：<span id="total-count">0</span>問</p>
+<div class="field">
+<label>出題範囲</label>
+<div class="range-inputs">
+<div class="range-input">
+<label for="start-number">何番から</label>
+<input type="number" id="start-number" min="1" value="1">
+</div>
+<div class="range-input">
+<label for="num-questions">何個</label>
+<input type="number" id="num-questions" min="1" value="10">
+</div>
+</div>
+</div>
+<div class="field field-checkbox">
+<label class="checkbox-row">
+<input type="checkbox" id="shuffle-order">
+<span>出題順をシャッフルする</span>
+</label>
+</div>
+<button id="btn-start" class="btn-primary">はじめる</button>
+<p id="settings-error" class="error-text"></p>
+<button id="btn-settings-back" class="btn-secondary">ホームに戻る</button>
+</section>
 
-    <details class="howto">
-      <summary>このアプリの使い方</summary>
-      <div class="howto-body">
-        <p>① 上のバナーから練習したいレベルを選びます。</p>
-        <p>② 出題する範囲（何番から何個）と、順番通りかランダムかを選んで「はじめる」を押します。</p>
-        <p>③ 問題には2種類あります。<br>
-          ・定義問題：「〜って何？」に答える問題（「答えを見る」→自己採点）<br>
-          ・4択問題：4つの選択肢から正しいものを選ぶ問題（自動採点）</p>
-        <p>④ 答えを確認したら「解説を見る」でくわしい説明を読めます。</p>
-        <p>⑤ 「前の問題」「次の問題」「前の解答」「次の解答」で自由に行き来できます。</p>
-      </div>
-    </details>
-  </section>
+<!-- ============ ③ クイズ画面 ============ -->
+<section id="screen-quiz" class="screen hidden">
+<div class="quiz-top">
+<span id="progress-text">1 / 10</span>
+<span id="score-text">正解 0</span>
+</div>
+<div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+<div class="card">
+<p class="pattern-no"><span id="pattern-label">第1文型</span> No.<span id="pattern-no">1</span></p>
+<p id="question-text" class="question-text"></p>
+<p id="answer-text" class="answer-text hidden"></p>
+<!-- 4択問題用（定義問題のときは空のまま非表示） -->
+<div id="choice-list" class="choice-list hidden"></div>
 
-  <!-- ============ ② 設定画面 ============ -->
-  <section id="screen-settings" class="screen hidden">
-    <h1 class="app-title" id="settings-title">レベル名</h1>
-    <p class="app-sub">このレベルの問題数：<span id="total-count">0</span>問</p>
+<!-- 解説（∨ 解説：インライン展開） -->
+<div id="explain-wrap" class="explain-wrap hidden">
+<button id="btn-explain-toggle" class="btn-explain-toggle" type="button">
+<span class="explain-arrow">∨</span> 解説
+</button>
+<div id="explain-box" class="explain-box hidden">
+<p id="explain-text" class="explain-text"></p>
+<button id="btn-explain-close" class="btn-explain-close" type="button">
+<span class="explain-arrow">∧</span> 閉じる
+</button>
+</div>
+</div>
+</div>
+<button id="btn-reveal" class="btn-primary">答えを見る</button>
+<div id="judge-row" class="judge-row hidden">
+<button id="btn-wrong" class="btn-judge btn-wrong">不正解</button>
+<button id="btn-correct" class="btn-judge btn-correct">正解</button>
+</div>
+<div class="nav-row">
+<button id="btn-prev-question" class="btn-secondary">← 前の問題</button>
+<button id="btn-next-question" class="btn-secondary">次の問題 →</button>
+</div>
+<div class="nav-row">
+<button id="btn-prev-answer" class="btn-secondary hidden">← 前の解答</button>
+<button id="btn-next-answer" class="btn-secondary hidden">次の解答 →</button>
+</div>
+<button id="btn-quit" class="btn-secondary">クイズをやめて、ホームに戻る</button>
+</section>
 
-    <div class="field">
-      <label>出題範囲</label>
-      <div class="range-inputs">
-        <div class="range-input">
-          <label for="start-number">何番から</label>
-          <input type="number" id="start-number" min="1" value="1">
-        </div>
-        <div class="range-input">
-          <label for="num-questions">何個</label>
-          <input type="number" id="num-questions" min="1" value="10">
-        </div>
-      </div>
-    </div>
-
-    <div class="field field-checkbox">
-      <label class="checkbox-row">
-        <input type="checkbox" id="shuffle-order">
-        <span>出題順をシャッフルする</span>
-      </label>
-    </div>
-
-    <button id="btn-start" class="btn-primary">はじめる</button>
-    <p id="settings-error" class="error-text"></p>
-    <button id="btn-settings-back" class="btn-secondary">ホームに戻る</button>
-  </section>
-
-  <!-- ============ ③ クイズ画面 ============ -->
-  <section id="screen-quiz" class="screen hidden">
-    <div class="quiz-top">
-      <span id="progress-text">1 / 10</span>
-      <span id="score-text">正解 0</span>
-    </div>
-    <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
-
-    <div class="card">
-      <p class="pattern-no"><span id="pattern-label">第1文型</span>　No.<span id="pattern-no">1</span></p>
-      <p id="question-text" class="question-text"></p>
-      <p id="answer-text" class="answer-text hidden"></p>
-
-      <!-- 4択問題用（定義問題のときは空のまま非表示） -->
-      <div id="choice-list" class="choice-list hidden"></div>
-    </div>
-
-    <button id="btn-reveal" class="btn-primary">答えを見る</button>
-
-    <div id="judge-row" class="judge-row hidden">
-      <button id="btn-wrong" class="btn-judge btn-wrong">不正解</button>
-      <button id="btn-correct" class="btn-judge btn-correct">正解</button>
-    </div>
-
-    <button id="btn-explanation" class="btn-primary btn-explanation hidden">解説を見る</button>
-
-    <div class="nav-row">
-      <button id="btn-prev-question" class="btn-secondary">← 前の問題</button>
-      <button id="btn-next-question" class="btn-secondary">次の問題 →</button>
-    </div>
-    <div class="nav-row">
-      <button id="btn-prev-answer" class="btn-secondary hidden">← 前の解答</button>
-      <button id="btn-next-answer" class="btn-secondary hidden">次の解答 →</button>
-    </div>
-
-    <button id="btn-quit" class="btn-secondary">クイズをやめて、ホームに戻る</button>
-  </section>
-
-  <!-- ============ ④ 解説オーバーレイ ============ -->
-  <div id="explanation-overlay" class="explanation-overlay hidden">
-    <div class="explanation-box">
-      <p class="pattern-no"><span id="expl-pattern-label">第1文型</span></p>
-      <p id="expl-question" class="question-text"></p>
-      <p id="expl-answer" class="answer-text"></p>
-      <p id="expl-text" class="explanation-text"></p>
-
-      <div class="nav-row">
-        <button id="btn-prev-expl" class="btn-secondary">← 前の解説</button>
-        <button id="btn-next-expl" class="btn-secondary">次の解説 →</button>
-      </div>
-      <button id="btn-close-expl" class="btn-primary">閉じる</button>
-    </div>
-  </div>
-
-  <!-- ============ ⑤ 結果画面 ============ -->
-  <section id="screen-result" class="screen hidden">
-    <h1 class="app-title">結果</h1>
-    <p class="result-score"><span id="result-correct">0</span> / <span id="result-total">0</span> 問正解</p>
-    <p class="result-percent" id="result-percent">0%</p>
-
-    <div id="review-wrap" class="review-wrap hidden">
-      <p class="review-title">復習リスト（不正解だった問題）</p>
-      <ul id="review-list" class="review-list"></ul>
-    </div>
-
-    <button id="btn-restart" class="btn-primary">もう一度このレベルで設定する</button>
-    <button id="btn-result-home" class="btn-secondary">ホームに戻る</button>
-  </section>
+<!-- ============ ④ 結果画面 ============ -->
+<section id="screen-result" class="screen hidden">
+<h1 class="app-title">結果</h1>
+<p class="result-score"><span id="result-correct">0</span> / <span id="result-total">0</span> 問正解</p>
+<p class="result-percent" id="result-percent">0%</p>
+<div id="review-wrap" class="review-wrap hidden">
+<p class="review-title">復習リスト（不正解だった問題）</p>
+<ul id="review-list" class="review-list"></ul>
+</div>
+<button id="btn-restart" class="btn-primary">もう一度このレベルで設定する</button>
+<button id="btn-result-home" class="btn-secondary">ホームに戻る</button>
+</section>
 
 </div>
-
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
