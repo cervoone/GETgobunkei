@@ -272,6 +272,9 @@ body {
   color: var(--ink);
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease;
+  display: flex;              /* ← 追加 */
+  align-items: center;        /* ← 追加 */
+  justify-content: space-between; /* ← 追加 */
 }
 
 .choice-btn:hover:not(:disabled) { border-color: var(--moss); }
@@ -289,6 +292,16 @@ body {
   border-color: var(--wrong);
   color: var(--wrong);
 }
+
+.choice-icon {
+  font-weight: 700;
+  font-size: 18px;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.choice-btn.is-correct .choice-icon { color: var(--correct); }
+.choice-btn.is-wrong .choice-icon { color: var(--wrong); }
 
 /* --- 解説トグル（∨ 解説） --- */
 .explain-wrap {
