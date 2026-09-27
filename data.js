@@ -54,9 +54,9 @@ const QUIZ_DATA = [
     
   {
     id: 3, pattern: 0, type: 'definition',
-    question: '英文法で「S」は何を表す記号？',
+    question: '文の要素で S は何を表す記号？',
     answer: '主語（Subject）',
-    explanation: 'S・V・O・Cは英文の要素を表す記号。Sはsubject（主語）の頭文字で、「〜は」「〜が」にあたる部分。'
+    explanation: 'Sはsubject（主語）の頭文字です。基本的に英文はSから始まると考えていきましょう。'
   },
   
   {
