@@ -29,7 +29,9 @@
 //    ここでは正解をどこに書いても大丈夫です（correctIndexで指定する番号と
 //    実際に書いた場所さえ合っていればOK）。
 //
-// ※ id は全体を通してユニークであれば数字が飛んでいても構いません。
+// ※ id は「パターン番号×100＋通し番号」（例：第2文型の1問目は 210）。番号は10刻みにして、途中に問題を足すときは間の数字（例：215）を使う。
+//   先頭に0を付けない（010 は8進数になり、エラーの原因になる）。
+//   id は全体を通してユニークであれば数字が飛んでいても構わない。
 //    新しい問題を足すときは、末尾に追加していくだけでOKです。
 // ============================================================
 
@@ -37,13 +39,13 @@ const QUIZ_DATA = [
 
   // ---------------- pattern 0：5文型のキホンの「キ」 ----------------
   {
-    id: 1, pattern: 0, type: 'definition',
+    id: 10, pattern: 0, type: 'definition',
     question: '「文の要素」って何？',
     answer: '英語の文は、大きく５つのパターン（５文型）に分類できます。「文の要素」とはその「５文型」を見分けるために使う、Ｓ（主語）・Ｖ（動詞）・Ｏ（目的語）・Ｃ（補語）の４種類のパーツのことです。',
     explanation: '「文の要素」は５文型を見分けるためのカギで、いわば骨組みです。しかし、英文にはその骨組みに意味を付け加える「飾り」の働きをする語句もよく含まれています。それらはＭ（修飾語）と呼ばれ、文型の判断には使いません。►I study English every day.(evey dayがＭ。ＩがＳ（主語）、studyがＶ（動詞）、EnglishがＯ（目的語）。every dayは動詞がいつ行われいるか（またはI study Englishと言う文全体がいつ行われているか）という飾りの役割と見なし、Ｍとなります。）'
   },
    {
-    id: 2, pattern: 0, type: 'choice',
+    id: 20, pattern: 0, type: 'choice',
     question: '「文の（主）要素」って何個？',
     choices: ['3つ', '4つ', '5つ', '6つ'],
     correctIndex: 1,
@@ -51,34 +53,34 @@ const QUIZ_DATA = [
   },
 
    {
-    id: 3, pattern: 0, type: 'definition',
+    id: 30, pattern: 0, type: 'definition',
     question: '「文の要素」以外はなんと呼ばれる？',
     answer: '修飾語（Modifier）',
     explanation: 'S・V・O・Cが文の「骨組み」とも言える中心部分で、それが「文の（主）要素」と言われます。それ以外は「飾り」と考えることができ、文法用語としては「修飾語」と言います。略号は「修飾語」を意味する　Modifier　の頭文字をとってMで表します。'
   },
     
   {
-    id: 4, pattern: 0, type: 'definition',
+    id: 40, pattern: 0, type: 'definition',
     question: '文の要素で S は何を表す記号？',
     answer: '主語（Subject）',
     explanation: 'Sはsubject（主語）の頭文字です。基本的に英文はSから始まると考えていきましょう。'
   },
   
   {
-    id: 5, pattern: 0, type: 'definition',
+    id: 50, pattern: 0, type: 'definition',
     question: '英文法で「M」は何を表す記号？',
     answer: '修飾語（Modifier）',
     explanation: 'MはModifier（修飾語）の頭文字。時・場所・様態などを表す語句で、文型そのものを決める要素にはならない。例：I live in Tokyo.のin Tokyoの部分。'
   },
   {
-    id: 6, pattern: 0, type: 'choice',
+    id: 60, pattern: 0, type: 'choice',
     question: '英語の文型は全部でいくつに分類される？',
     choices: ['3つ', '4つ', '5つ', '6つ'],
     correctIndex: 2,
     explanation: '英語の文はS・V・O・Cの組み合わせによって第1文型〜第5文型の5種類に分類される。これは動詞の性質（自動詞か他動詞か、補語をとるかなど）による分類。'
   },
   {
-    id: 7, pattern: 0, type: 'choice',
+    id: 70, pattern: 0, type: 'choice',
     question: '文型を決める一番の決め手は何？',
     choices: ['文の長さ', '動詞の種類', '主語の人称', '時制'],
     correctIndex: 1,
